@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CRM | My Tickets</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+<!-- SESSION CHECK -->
+<script>
+fetch("../backend/auth/check.php")
+.then(res => {
+  if(res.status !== 200){
+    window.location.href = "login.html";
+  }
+});
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4">
+  <span class="navbar-brand">🎫 CRM Ticket System</span>
+  <a href="../backend/auth/logout.php" class="btn btn-sm btn-danger">Logout</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="container mt-5">
+
+  <div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0">My Tickets</h4>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+        ➕ Create Ticket
+      </button>
+    </div>
+
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="ticketTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2026 CRM Ticket Module | PHP • MySQL • Bootstrap
+</footer>
+
+<!-- CREATE TICKET MODAL -->
+<div class="modal fade" id="createModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Ticket</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input id="title" class="form-control mb-3" placeholder="Ticket Title">
+        <textarea id="desc" class="form-control" rows="4" placeholder="Ticket Description"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" onclick="createTicket()">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- PAGE SCRIPT -->
+<script>
+function badge(status){
+  return {
+    pending:"secondary",
+    inprogress:"warning",
+    completed:"success",
+    onhold:"dark"
+  }[status];
+}
+
+fetch("../backend/tickets/list.php")
+.then(res => res.json())
+.then(data => {
+  let html = "";
+
+  data.forEach(t => {
+    let isAuthor = t.created_by == t.current_user;
+    let isAssignee = t.assigned_to == t.current_user;
+
+    html += `
+      <tr>
+        <td>${t.name}</td>
+        <td>
+          <span class="badge bg-${badge(t.status)}">${t.status}</span>
+        </td>
+        <td>
+    `;
+
+    if (isAuthor) {
+      html += `<span class="badge bg-info me-2">Author</span>`;
+    }
+
+    if (isAssignee) {
+      html += `
+        <select class="form-select form-select-sm d-inline w-auto"
+          onchange="updateStatus(${t.id}, this.value)">
+          <option value="">Update</option>
+          <option value="pending">Pending</option>
+          <option value="inprogress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="onhold">On Hold</option>
+        </select>
+      `;
+    }
+
+    if (!isAuthor && !isAssignee) {
+      html += `<span class="text-muted">No actions</span>`;
+    }
+
+    html += `
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("ticketTable").innerHTML = html;
+});
+
+function createTicket(){
+  fetch("../backend/tickets/create.php",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json"},
+    body:JSON.stringify({
+      name:title.value,
+      description:desc.value
+    })
+  }).then(() => location.reload());
+}
+
+function updateStatus(id, status){
+  if(!status) return;
+
+  fetch("../backend/tickets/update_status.php",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json"},
+    body:JSON.stringify({
+      id:id,
+      status:status
+    })
+  }).then(() => location.reload());
+}
+</script>
+
+</body>
+</html>

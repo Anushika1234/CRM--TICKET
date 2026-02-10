@@ -1,0 +1,92 @@
+/* ===== GLOBAL RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+/* ===== PAGE BACKGROUND ===== */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== AUTH CONTAINER ===== */
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+}
+
+/* ===== CARD ===== */
+.card {
+  border: none;
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+}
+
+/* ===== TITLE ===== */
+.auth-title {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #1e3c72;
+}
+
+/* ===== FORM LABELS ===== */
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* ===== INPUTS ===== */
+.form-control {
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #1e3c72;
+  box-shadow: 0 0 0 0.2rem rgba(30, 60, 114, 0.2);
+}
+
+/* ===== BUTTON ===== */
+.btn-primary {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(30, 60, 114, 0.3);
+}
+
+/* ===== LINKS ===== */
+a {
+  text-decoration: none;
+  color: #1e3c72;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== FOOT TEXT ===== */
+.text-center {
+  font-size: 14px;
+  color: #555;
+}
